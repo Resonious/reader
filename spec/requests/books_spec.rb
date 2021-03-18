@@ -29,4 +29,16 @@ describe 'Books, baby' do
     expect(body['content']).to eq 'abc'
     expect(body['idx']).to eq 3
   end
+
+  it 'lets me view a book' do
+    Book.create!(slug: 'mine', content: 'thecontent', idx: 3)
+
+    get '/v1/books/mine', headers: good_auth
+    expect(response).to be_ok
+
+    body = JSON.parse(response.body)
+    expect(body['slug']).to eq 'mine'
+    expect(body['content']).to eq 'thecontent'
+    expect(body['idx']).to eq 3
+  end
 end

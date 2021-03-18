@@ -37,6 +37,15 @@ module Reader
           present book, with: Entities::Book
         end
       end
+
+      desc 'View a book and its contents (all in one big resposne!! maybe bad!!)'
+      route_param :slug do
+        get do
+          authenticate!
+          book = Book.find_or_initialize_by(slug: params[:slug])
+          present book, with: Entities::Book
+        end
+      end
     end
   end
 end
