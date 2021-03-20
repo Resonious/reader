@@ -1,0 +1,94 @@
+<div class='book'>
+  <a href='#' id='left-arrow'>&lt;</a>
+  <article id='article'><%= @book.content %></article>
+  <a href='#' id='right-arrow'>&gt;</a>
+</div>
+<span id='pageno'>?</span>
+
+<style>
+.book {
+  display: flex;
+  align-items: center;
+
+  position: absolute;
+  top: 40px;
+  bottom: 20px;
+}
+
+#pageno {
+  position: fixed;
+  right: 15px;
+  top: 5px;
+}
+
+article {
+  writing-mode: vertical-rl;
+  padding-left: 35px;
+  padding-right: 35px;
+}
+
+p:not(.active) {
+  display: none;
+}
+</style>
+
+<script>
+function currentNumber() {
+  const hash = location.hash
+  return hash.length <= 1 ? '0' : hash.substr(1)
+}
+
+function readHash() {
+  const number = currentNumber()
+  const active = document.querySelector('.active')
+  if (active) active.classList.remove('active')
+
+  console.log(`p-${number}`)
+  document.getElementById(`p-${number}`).classList.add('active')
+  document.getElementById('pageno').textContent = number
+}
+
+function goleft(event) {
+  event.preventDefault()
+  const number = currentNumber()
+  const max = document.getElementsByTagName('p').length
+  if (number >= max) return
+  location.hash = `#${parseInt(number) + 1}`
+}
+function goright(event) {
+  event.preventDefault()
+  const number = currentNumber()
+  if (number <= 0) return
+  location.hash = `#${parseInt(number) - 1}`
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const article = document.getElementById('article')
+  const content = article.textContent
+
+  const paragraphs = content.split(/　　+/)
+  const lines = paragraphs
+    .map(p => p.split('。')
+    .map(l => (l.match(/^[\s　]+$/) || l.length === 0) ? '' : `${l}。`))
+
+  let buffer = ""
+  let index = 0
+  for (const paragraph of lines) {
+    buffer += `<p id='p-${index++}'>`
+    for (const line of paragraph) {
+      buffer += line
+      buffer += "<br>"
+    }
+    buffer += "</p>"
+  }
+
+  article.innerHTML = buffer
+
+  readHash()
+
+  document.getElementById('left-arrow').onclick = goleft
+  document.getElementById('right-arrow').onclick = goright
+
+  window.addEventListener('hashchange', readHash, false)
+})
+</script>
