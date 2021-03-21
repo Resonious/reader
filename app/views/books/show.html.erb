@@ -35,6 +35,10 @@ article {
 p:not(.active) {
   display: none;
 }
+
+.highlight {
+  background-color: #fffeae;
+}
 </style>
 
 <script>
@@ -45,10 +49,9 @@ function currentNumber() {
 
 function readHash() {
   const number = currentNumber()
-  const active = document.querySelector('.active')
-  if (active) active.classList.remove('active')
+  for (const el of document.querySelectorAll('.active'))
+    el.classList.remove('active')
 
-  console.log(`p-${number}`)
   document.getElementById(`p-${number}`).classList.add('active')
   document.getElementById('pageno').textContent = number
 }
@@ -67,6 +70,13 @@ function goright(event) {
   location.hash = `#${parseInt(number) - 1}`
 }
 
+function highlight(event) {
+  for (const el of document.querySelectorAll('.highlight'))
+    if (el !== event.target)
+      el.classList.remove('highlight')
+  event.target.classList.toggle('highlight')
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const article = document.getElementById('article')
   const content = article.textContent
@@ -81,7 +91,9 @@ document.addEventListener('DOMContentLoaded', () => {
   for (const paragraph of lines) {
     buffer += `<p id='p-${index++}'>`
     for (const line of paragraph) {
+      buffer += "<span onclick='highlight(event)'>"
       buffer += line
+      buffer += "</span>"
       buffer += "<br>"
     }
     buffer += "</p>"
