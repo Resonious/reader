@@ -5,5 +5,6 @@ class BooksController < ApplicationController
 
   def show
     @book = Book.find_by!(slug: params[:id])
+    @title = @book.name
   end
 end

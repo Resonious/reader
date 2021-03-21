@@ -41,4 +41,16 @@ describe 'Books, baby' do
     expect(body['content']).to eq 'thecontent'
     expect(body['idx']).to eq 3
   end
+
+  it 'lets me update book name' do
+    Book.create!(slug: 'mine')
+
+    patch '/v1/books/mine', params: { name: 'Cool One' }, headers: good_auth
+    expect(response).to be_ok
+
+    book = Book.last
+    expect(book).to be_present
+    expect(book.slug).to eq 'mine'
+    expect(book.name).to eq 'Cool One'
+  end
 end

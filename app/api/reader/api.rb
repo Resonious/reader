@@ -20,7 +20,7 @@ module Reader
 
     resource :books do
       desc 'Create or amend a book' do
-        params Entities::Book.documentation
+        params Entities::FullBook.documentation
       end
       params do
         requires :slug, type: String, desc: 'Book slug'
@@ -34,7 +34,24 @@ module Reader
           book.content += params[:content]
           book.idx = params[:idx]
           book.save!
-          present book, with: Entities::Book
+          present book, with: Entities::PartialBook
+        end
+      end
+
+      desc 'Update book name' do
+        params Entities::FullBook.documentation
+      end
+      params do
+        requires :slug, type: String, desc: 'Book slug'
+        requires :name, type: String, desc: 'New name'
+      end
+      route_param :slug do
+        patch do
+          authenticate!
+          book = Book.find_or_initialize_by(slug: params[:slug])
+          book.name = params[:name]
+          book.save!
+          present book, with: Entities::PartialBook
         end
       end
 
@@ -43,7 +60,7 @@ module Reader
         get do
           authenticate!
           book = Book.find_or_initialize_by(slug: params[:slug])
-          present book, with: Entities::Book
+          present book, with: Entities::FullBook
         end
       end
     end
