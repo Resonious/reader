@@ -6,8 +6,8 @@ module Reader
     helpers do
       def api_key
         @api_key ||= (
-          username = Rack::Auth::Basic::Request.new(env).username
-          APIKey.find_by(key: username.encode('UTF-8'))
+          username = Rack::Auth::Basic::Request.new(env)&.username
+          APIKey.find_by(key: username.encode('UTF-8')) if username
         )
       rescue Encoding::UndefinedConversionError
         nil
