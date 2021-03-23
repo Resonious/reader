@@ -1,4 +1,6 @@
 class Book < ApplicationRecord
+  has_many :paragraphs, inverse_of: :book
+
   validates :slug, presence: true
 
   after_initialize do
@@ -7,5 +9,20 @@ class Book < ApplicationRecord
 
   before_validation do
     self.name ||= slug
+  end
+
+  def last_paragraph
+    paragraphs.last || paragraphs.build(index: 0)
+  end
+
+  def add_content(text)
+    paragraph_texts = text.split(/　　+/)
+    current_paragraph_text = paragraph_texts.shift
+
+    last_paragraph.update! content: last_paragraph.content + current_paragraph_text
+
+    paragraph_texts.each do |paragraph_text|
+      paragraphs.create! index: paragraphs.size, content: paragraph_text
+    end
   end
 end
