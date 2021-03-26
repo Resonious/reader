@@ -1,5 +1,17 @@
+# frozen_string_literal: true
+
+# Main class for the app. Has many paragraphs. Add content with add_content,
+# and paragraphs will be parsed out automatically.
 class Book < ApplicationRecord
-  has_many :paragraphs, inverse_of: :book
+  has_many :paragraphs, inverse_of: :book do
+    def at(index)
+      find_by(index: index)
+    end
+
+    def at!(index)
+      find_by!(index: index)
+    end
+  end
 
   validates :slug, presence: true
 

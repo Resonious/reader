@@ -20,26 +20,26 @@ module Reader
 
     resource :books do
       desc 'Create or amend a book' do
-        params Entities::FullBook.documentation
+        params Entities::Book.documentation
       end
       params do
         requires :slug, type: String, desc: 'Book slug'
         requires :idx, type: Integer, desc: 'New "idx" value'
-        requires :content, type: String, desc: 'Content to append'
+        optional :content, type: String, desc: 'Content to append'
       end
       route_param :slug do
         post do
           authenticate!
           book = Book.find_or_initialize_by(slug: params[:slug])
-          book.content += params[:content]
           book.idx = params[:idx]
+          book.add_content params[:content] if params[:content].present?
           book.save!
-          present book, with: Entities::PartialBook
+          present book, with: Entities::Book
         end
       end
 
       desc 'Update book name' do
-        params Entities::FullBook.documentation
+        params Entities::Book.documentation
       end
       params do
         requires :slug, type: String, desc: 'Book slug'
@@ -51,16 +51,19 @@ module Reader
           book = Book.find_or_initialize_by(slug: params[:slug])
           book.name = params[:name]
           book.save!
-          present book, with: Entities::PartialBook
+          present book, with: Entities::Book
         end
       end
 
-      desc 'View a book and its contents (all in one big resposne!! maybe bad!!)'
+      desc 'View a book. Includes last paragraph.'
+      params do
+        optional :p, type: Integer, desc: 'Paragraph index'
+      end
       route_param :slug do
         get do
           authenticate!
           book = Book.find_or_initialize_by(slug: params[:slug])
-          present book, with: Entities::FullBook
+          present book, with: Entities::Book, p: params[:p]
         end
       end
     end

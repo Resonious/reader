@@ -1,19 +1,21 @@
+# frozen_string_literal: true
+
+# Reader Entities
 module Reader
   module Entities
-    class FullBook < Grape::Entity
+    # Book entity
+    class Book < Grape::Entity
       expose :slug
       expose :name
-      expose :content
       expose :idx
-    end
-
-    class PartialBook < Grape::Entity
-      expose :slug
-      expose :name
-      expose :content do |book|
-        book.content.truncate(100)
+      expose :p do |book, options|
+        index = options[:p] || book.paragraphs.size - 1
+        book.paragraphs.at(index)&.index
       end
-      expose :idx
+      expose :content do |book, options|
+        index = options[:p] || book.paragraphs.size - 1
+        book.paragraphs.at(index)&.content
+      end
     end
   end
 end
