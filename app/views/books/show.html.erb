@@ -60,6 +60,16 @@
   top: 5px;
 }
 
+#lookup-results {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  right: 55px;
+  height: 35px;
+
+  background-color: red;
+}
+
 article {
   writing-mode: vertical-rl;
   padding-left: 35px;
@@ -79,6 +89,8 @@ article {
 }
 </style>
 
+<div id='lookup-results'>
+</div>
 <div id='container'>
   <% unless @paragraph.last? %>
     <%= link_to '', book_path(@book.slug, @paragraph.index + 1, anchor: 'first'), class: 'nav-btn' %>
