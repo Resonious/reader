@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   mount Reader::API => '/'
 
-  resources :books, only: [:index, :show]
+  get '/book/:slug/:p', to: 'books#show', as: 'book'
+  get '/book/:slug', to: 'books#show'
 end

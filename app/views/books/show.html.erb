@@ -1,111 +1,15 @@
-<div class='book'>
-  <a href='#' id='left-arrow'>&lt;</a>
-  <article id='article'><%= @book.content %></article>
-  <a href='#' id='right-arrow'>&gt;</a>
-</div>
-<span id='pageno'>?</span>
-
-<style>
-.book {
-  display: flex;
-  align-items: center;
-
-  position: absolute;
-  overflow: scroll;
-  top: 40px;
-  bottom: 20px;
-  left: 0;
-  right: 0;
-}
-
-#pageno {
-  position: fixed;
-  right: 15px;
-  top: 5px;
-}
-
-article {
-  writing-mode: vertical-rl;
-  padding-left: 35px;
-  padding-right: 35px;
-
-  line-height: 1.6;
-}
-
-p:not(.active) {
-  display: none;
-}
-
-.highlight {
-  background-color: #fffeae;
-}
-</style>
+<% content_for :head do %>
+  <%= javascript_pack_tag :book %>
+<% end %>
 
 <script>
-function currentNumber() {
-  const hash = location.hash
-  return hash.length <= 1 ? '0' : hash.substr(1)
-}
-
-function readHash() {
-  const number = currentNumber()
-  for (const el of document.querySelectorAll('.active'))
-    el.classList.remove('active')
-
-  document.getElementById(`p-${number}`).classList.add('active')
-  document.getElementById('pageno').textContent = number
-}
-
-function goleft(event) {
-  event.preventDefault()
-  const number = currentNumber()
-  const max = document.getElementsByTagName('p').length
-  if (number >= max) return
-  location.hash = `#${parseInt(number) + 1}`
-}
-function goright(event) {
-  event.preventDefault()
-  const number = currentNumber()
-  if (number <= 0) return
-  location.hash = `#${parseInt(number) - 1}`
-}
-
-function highlight(event) {
-  for (const el of document.querySelectorAll('.highlight'))
-    if (el !== event.target)
-      el.classList.remove('highlight')
-  event.target.classList.toggle('highlight')
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  const article = document.getElementById('article')
-  const content = article.textContent
-
-  const paragraphs = content.split(/　　+/)
-  const lines = paragraphs
-    .map(p => p.split('。')
-    .map(l => (l.match(/^[\s　]+$/) || l.length === 0) ? '' : `${l}。`))
-
-  let buffer = ""
-  let index = 0
-  for (const paragraph of lines) {
-    buffer += `<p id='p-${index++}'>`
-    for (const line of paragraph) {
-      buffer += "<span onclick='highlight(event)'>"
-      buffer += line
-      buffer += "</span>"
-      buffer += "<br>"
-    }
-    buffer += "</p>"
-  }
-
-  article.innerHTML = buffer
-
-  readHash()
-
-  document.getElementById('left-arrow').onclick = goleft
-  document.getElementById('right-arrow').onclick = goright
-
-  window.addEventListener('hashchange', readHash, false)
-})
+  window.book = <%=
+    raw({
+      content: @paragraph.content,
+      page: @paragraph.index,
+      pageCount: @book.paragraphs.size
+    }.to_json)
+  %>
 </script>
+
+<div id='viewer'></div>
