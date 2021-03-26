@@ -1,0 +1,101 @@
+`git submodule status`.lines.each do |line|
+  # The git-submodule man page says uninitialized submodules are prefixed with a -
+  # but I found this unreliable. While testing I pressed Control-C in the middle of
+  # the update command so some submodule would be initialized and others wouldn't.
+  # After that, the status command had removed the - for every submodule.
+  # Therefore we just check if there's files in the directory instead.
+  dir = line.strip.split(' ')[1]
+  if Dir.empty?(dir)
+    puts "Found uninitialized git submodule '#{dir}'"
+    puts "please run 'git submodule update --init --recursive'"
+    exit 1
+  end
+end
+
+args = {}
+args['UID'] = Process.uid
+
+dockerfile "Dockerfile", args: args
+
+db "mysql:8.0",
+  port: 3306,
+  data_dir: "/var/lib/mysql",
+  params: "-e MYSQL_ROOT_PASSWORD=test123",
+  commands: "
+    --character-set-server=utf8mb4
+    --collation-server=utf8mb4_unicode_ci
+    --innodb-large-prefix
+    --innodb-file-format=barracuda",
+  waitscript_params: "
+    -e MYSQL_PORT_3306_TCP_ADDR=<%= db_container_name %>
+    -e MYSQL_PORT_3306_TCP_PORT=3306
+    -e MYSQL_ENV_MYSQL_ROOT_PASSWORD=test123",
+  waitscript: <<-SCRIPT
+#!/bin/bash
+echo "Waiting for mysql to start."
+until mysql -h"$MYSQL_PORT_3306_TCP_ADDR" -P"$MYSQL_PORT_3306_TCP_PORT" -uroot -p"$MYSQL_ENV_MYSQL_ROOT_PASSWORD" -e "SELECT 1" &> /dev/null
+do
+  printf "."
+  sleep 1
+done
+sleep 1
+
+echo -e "\nmysql started."
+  SCRIPT
+
+app_params "
+  -e ATTR_ENCRYPTION_SECRET_KEY=548450061a5588262329bee1bf69dabe1552288d98906aaccf0d0e41e983303d4c09e014ad60be03d0d4a76138991102441dbea88bb8073a0ddc0df1ac606b74
+  -e RAILS_SECRET_KEY_BASE=4660f4bf68c0b98a5f93c620dc2422bea42e91e8ad2eb4df6fd698ea92373d0f159be8afbe3ee0a7db738e33580f532e2d75aecd826e3f9179fd4f59e1b53897
+  -e DATABASE_URL=mysql2://root:test123@<%= db_container_name %>
+  -e REMOTE_CHROME_HOST=<%= @config[:shared_names][:chrome] %>
+  -e TEST_HOST=<%= app_container_name %>
+  -e TEST_SERVER=webrick
+  -e MIXPANEL_TOKEN=7a5a7fa1d0aad840668294063af14e07"
+
+mnt = lambda do |x|
+  attach_mount x, "/app/#{x}" if File.exist? x
+end
+
+mnt["app"]
+mnt["barcelona.yml"]
+mnt["bin"]
+mnt["config"]
+mnt["drivers"]
+mnt["config.ru"]
+mnt["CONTRIBUTING.md"]
+mnt["crowdin.yml"]
+mnt["db"]
+mnt["Gemfile"]
+mnt["Gemfile.lock"]
+mnt["Guardfile"]
+mnt["lib"]
+mnt["log"]
+mnt["Makefile"]
+mnt["package.json"]
+mnt["Procfile"]
+mnt["public"]
+mnt["Rakefile"]
+mnt["README.md"]
+mnt["schema"]
+mnt["spec"]
+mnt["vendor"]
+mnt["yarn.lock"]
+mnt["knapsack_rspec_report.json"]
+
+mnt[".babelrc"]
+mnt[".editorconfig"]
+mnt[".env.development"]
+mnt[".env.test"]
+mnt[".postcssrc.yml"]
+mnt[".rspec"]
+mnt[".rubocop.yml"]
+mnt[".rubocop_todo.yml"]
+mnt[".solargraph.yml"]
+mnt[".travis.yml"]
+mnt[".vscode"]
+mnt[".yardopts"]
+
+type :http
+
+expose "9000"
+db_reset_command "echo .."
