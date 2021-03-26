@@ -17,19 +17,20 @@ args['UID'] = Process.uid
 
 dockerfile "Dockerfile", args: args
 
+FileUtils.mkdir_p '/tmp/mysql8'
+IO.write("/tmp/mysql8_custom.cnf", "[mysqld]\ndefault_authentication_plugin=mysql_native_password\n")
+
 db "mysql:8.0",
   port: 3306,
   data_dir: "/var/lib/mysql",
-  params: "-e MYSQL_ROOT_PASSWORD=test123",
-  commands: "
-    --character-set-server=utf8mb4
-    --collation-server=utf8mb4_unicode_ci
-    --innodb-large-prefix
-    --innodb-file-format=barracuda",
+  params: "-e MYSQL_ROOT_PASSWORD=test123
+           -v /tmp/mysql8_custom.cnf:/etc/mysql/conf.d/custom.cnf",
+  commands: "",
   waitscript_params: "
     -e MYSQL_PORT_3306_TCP_ADDR=<%= db_container_name %>
     -e MYSQL_PORT_3306_TCP_PORT=3306
-    -e MYSQL_ENV_MYSQL_ROOT_PASSWORD=test123",
+    -e MYSQL_ENV_MYSQL_ROOT_PASSWORD=test123
+    ",
   waitscript: <<-SCRIPT
 #!/bin/bash
 echo "Waiting for mysql to start."
