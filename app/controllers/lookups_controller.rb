@@ -4,7 +4,8 @@
 class LookupsController < ApplicationController
   def new
     keyword = params[:q]
-    response = Faraday.get("https://jisho.org/api/v1/search/words?keyword=#{keyword}")
+    url = "https://jisho.org/api/v1/search/words?keyword=#{CGI.escape(keyword)}"
+    response = Faraday.get(url)
 
     render inline: response.body,
            content_type: 'application/json',

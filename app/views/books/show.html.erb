@@ -1,5 +1,5 @@
 <% content_for :head do %>
-  <%# javascript_pack_tag :book %>
+  <%= javascript_pack_tag :book %>
 <% end %>
 
 <script>
@@ -38,58 +38,68 @@
 
   window.addEventListener('hashchange', hashchange)
 
+  document.addEventListener('selectionchange', async() => {
+    const text = document.getSelection().toString()
+    if (!text) return
+    if (text.length > 10) return
+    if (text.length <= 0) return
+
+    window.lookup.$set({query: text})
+    lookupRequest(text, results => window.lookup.$set({results}))
+  })
+
   document.querySelector('next')
 </script>
 
 <style>
-#container {
-  display: flex;
-  align-items: center;
+  #container {
+    display: flex;
+    align-items: center;
 
-  position: absolute;
-  overflow: scroll;
-  top: 40px;
-  bottom: 20px;
-  left: 0;
-  right: 0;
-}
+    position: absolute;
+    overflow-x: scroll;
+    top: 70px;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+  }
 
-#pageno {
-  position: fixed;
-  right: 15px;
-  top: 5px;
-}
+  #pageno {
+    position: fixed;
+    right: 15px;
+    top: 5px;
+  }
 
-#lookup-results {
-  position: fixed;
-  top: 0px;
-  left: 0px;
-  right: 55px;
-  height: 35px;
+  #lookup {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    right: 55px;
+    height: 65px;
 
-  background-color: red;
-}
+    background-color: #c1ffaa;
+  }
 
-article {
-  writing-mode: vertical-rl;
-  padding-left: 35px;
-  padding-right: 35px;
+  article {
+    writing-mode: vertical-rl;
+    padding-left: 35px;
+    padding-right: 35px;
 
-  line-height: 1.6;
-}
+    line-height: 1.6;
+  }
 
-.highlight {
-  background-color: #fffeae;
-}
+  .highlight {
+    background-color: #fffeae;
+  }
 
-.nav-btn {
-  background-color: #eee;
-  min-width: 50px;
-  height: 100%;
-}
+  .nav-btn {
+    background-color: #eee;
+    min-width: 50px;
+    height: 100%;
+  }
 </style>
 
-<div id='lookup-results'>
+<div id='lookup'>
 </div>
 <div id='container'>
   <% unless @paragraph.last? %>
