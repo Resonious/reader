@@ -1,5 +1,5 @@
 <% content_for :head do %>
-  <%= javascript_pack_tag :book %>
+  <%# javascript_pack_tag :book %>
 <% end %>
 
 <script>
@@ -10,6 +10,88 @@
       pageCount: @book.paragraphs.size
     }.to_json)
   %>
+
+  const hashchange = () => {
+    const n = location.hash.substr(1)
+    let selected
+
+    if (n === 'first')
+      selected = document.querySelector('article p:first-child')
+    else if (n === 'last')
+      selected = document.querySelector('article p:last-child')
+    else
+      selected = document.querySelector(`#p${n}`)
+
+    for (const el of document.querySelectorAll('.highlight'))
+      el.classList.remove('highlight')
+
+    if (selected)
+      selected.classList.add('highlight')
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    for (const el of document.querySelectorAll('p')) {
+      el.onclick = () => document.location.hash = `#${el.id.substr(1)}`
+    }
+    hashchange()
+  })
+
+  window.addEventListener('hashchange', hashchange)
+
+  document.querySelector('next')
 </script>
 
-<div id='viewer'></div>
+<style>
+#container {
+  display: flex;
+  align-items: center;
+
+  position: absolute;
+  overflow: scroll;
+  top: 40px;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+}
+
+#pageno {
+  position: fixed;
+  right: 15px;
+  top: 5px;
+}
+
+article {
+  writing-mode: vertical-rl;
+  padding-left: 35px;
+  padding-right: 35px;
+
+  line-height: 1.6;
+}
+
+.highlight {
+  background-color: #fffeae;
+}
+
+.nav-btn {
+  background-color: #eee;
+  min-width: 50px;
+  height: 100%;
+}
+</style>
+
+<div id='container'>
+  <% unless @paragraph.last? %>
+    <%= link_to '', book_path(@book.slug, @paragraph.index + 1, anchor: 'first'), class: 'nav-btn' %>
+  <% end %>
+
+  <article>
+    <% @paragraph.lines.each_with_index do |line, i| %>
+      <p id='p<%= i %>'><%= line %></p>
+    <% end %>
+  </article>
+
+  <% unless @paragraph.first? %>
+    <%= link_to '', book_path(@book.slug, @paragraph.index - 1, anchor: 'last'), class: 'nav-btn' %>
+  <% end %>
+</div>
+<span id='pageno'><%= @paragraph.index %>/<%= @book.paragraphs.size-1 %></span>
