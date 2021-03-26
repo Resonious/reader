@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# One single paragraph. A book consists of many of these.
 class Paragraph < ApplicationRecord
   belongs_to :book, inverse_of: :paragraphs
 
@@ -6,7 +9,7 @@ class Paragraph < ApplicationRecord
   end
 
   def first?
-    index == 0
+    index.zero?
   end
 
   def last?
