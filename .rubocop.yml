@@ -1,2 +1,13 @@
+AllCops:
+    NewCops: enable
+
+Layout/ArgumentAlignment:
+  Enabled: false
+
 Layout/LineLength:
   Max: 100
+
+Metrics/BlockLength:
+  Exclude:
+    - 'app/api/**/*'
+    - 'spec/**/*'
