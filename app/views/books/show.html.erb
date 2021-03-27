@@ -26,7 +26,7 @@
       return
     }
     else
-      selected = document.querySelector(`#p${n}`)
+      selected = document.querySelector(`#${n}`)
 
     for (const el of document.querySelectorAll('.highlight'))
       if (el !== selected)
@@ -38,7 +38,7 @@
 
   document.addEventListener('DOMContentLoaded', () => {
     for (const el of document.querySelectorAll('p')) {
-      el.onclick = () => document.location.hash = `#${el.id.substr(1)}`
+      el.onclick = () => document.location.hash = `#${el.id}`
     }
     hashchange()
   })
