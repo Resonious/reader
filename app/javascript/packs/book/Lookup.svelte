@@ -16,8 +16,10 @@
   .main {
     display: flex;
     flex-direction: row;
+    box-sizing: border-box;
 
     height: 100%;
+    padding: 5px;
 
     overflow-y: scroll;
   }

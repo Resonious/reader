@@ -15,18 +15,25 @@
     const n = location.hash.substr(1)
     let selected
 
-    if (n === 'first')
+    if (n === 'first') {
       selected = document.querySelector('article p:first-child')
-    else if (n === 'last')
+      location.hash = `#${selected.id}`
+      return
+    }
+    else if (n === 'last') {
       selected = document.querySelector('article p:last-child')
+      location.hash = `#${selected.id}`
+      return
+    }
     else
       selected = document.querySelector(`#p${n}`)
 
     for (const el of document.querySelectorAll('.highlight'))
-      el.classList.remove('highlight')
+      if (el !== selected)
+        el.classList.remove('highlight')
 
     if (selected)
-      selected.classList.add('highlight')
+      selected.classList.toggle('highlight')
   }
 
   document.addEventListener('DOMContentLoaded', () => {
@@ -44,11 +51,8 @@
     if (text.length > 10) return
     if (text.length <= 0) return
 
-    window.lookup.$set({query: text})
-    lookupRequest(text, results => window.lookup.$set({results}))
+    lookupRequest(text, results => window.lookup.$set({results, query: text}))
   })
-
-  document.querySelector('next')
 </script>
 
 <style>
@@ -76,8 +80,6 @@
     left: 0px;
     right: 55px;
     height: 65px;
-
-    background-color: #c1ffaa;
   }
 
   article {
@@ -89,7 +91,7 @@
   }
 
   .highlight {
-    background-color: #fffeae;
+    background-color: #ffffde;
   }
 
   .nav-btn {
