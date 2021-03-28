@@ -29,6 +29,7 @@
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
+    margin-right: 5px;
   }
 
   a {
@@ -65,7 +66,7 @@
         {#if kanji}
           <ruby>{kanji}<rt>{furigana}</rt></ruby>
         {:else}
-          {slug};
+          {slug}
         {/if}
       </a>
       {#if jlpt}
