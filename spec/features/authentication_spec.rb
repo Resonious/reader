@@ -16,6 +16,17 @@ feature 'Browser APIKey authentication:' do
     expect(current_path).to eq '/whoareyou'
   end
 
+  specify 'I cannot sign in with a bad API key' do
+    APIKey.create! key: 'abc123'
+
+    visit '/whoareyou'
+
+    fill_in 'key', with: 'notarealkey'
+    click_button 'Enter'
+
+    expect(page).to have_content 'No dice.'
+  end
+
   specify 'when I sign in, I am sent to "/"' do
     APIKey.create! key: 'abc123'
 

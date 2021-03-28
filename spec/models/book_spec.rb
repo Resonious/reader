@@ -39,5 +39,24 @@ describe Book do
       expect(book.paragraphs[1].content).to eq 'paragraph content 2'
       expect(book.paragraphs[2].content).to eq 'paragraph content 3'
     end
+
+    it 'handles a paragraph that ends in two FW spaces' do
+      book = Book.create! slug: 'test'
+      book.add_content 'paragraph content 1　　'
+
+      expect(book.paragraphs.size).to eq 2
+      expect(book.paragraphs.first.content).to eq 'paragraph content 1'
+      expect(book.paragraphs.last.content).to eq ''
+    end
+
+    it 'handles a content that ends in FWS followed by one that starts in with FWS' do
+      book = Book.create! slug: 'test'
+      book.add_content 'paragraph content 1　'
+      book.add_content '　paragraph content 2'
+
+      expect(book.paragraphs.size).to eq 2
+      expect(book.paragraphs.first.content).to eq 'paragraph content 1'
+      expect(book.paragraphs.last.content).to eq 'paragraph content 2'
+    end
   end
 end
