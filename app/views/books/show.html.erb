@@ -29,11 +29,10 @@
       selected = document.querySelector(`#${n}`)
 
     for (const el of document.querySelectorAll('.highlight'))
-      if (el !== selected)
-        el.classList.remove('highlight')
+      el.classList.remove('highlight')
 
     if (selected)
-      selected.classList.toggle('highlight')
+      selected.classList.add('highlight')
   }
 
   document.addEventListener('DOMContentLoaded', () => {
