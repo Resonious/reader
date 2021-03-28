@@ -29,12 +29,28 @@ class Book < ApplicationRecord
 
   def add_content(text)
     paragraph_texts = text.split(/　　+/)
-    current_paragraph_text = paragraph_texts.shift
 
-    last_paragraph.update! content: last_paragraph.content + current_paragraph_text
+    # When we receive one paragraph that ends in 2FWS, our usual algorithm
+    # doesn't quite work. We want to create an empty paragraph after appending.
+    paragraph_texts << '' if paragraph_texts.size == 1 && text =~ /　　+$/
+
+    append_to_last_paragraph(paragraph_texts)
 
     paragraph_texts.each do |paragraph_text|
       paragraphs.create! index: paragraphs.size, content: paragraph_text
+    end
+  end
+
+  private
+
+  def append_to_last_paragraph(paragraph_texts)
+    if last_paragraph.content.ends_with?('　') &&
+       paragraph_texts.first.starts_with?('　')
+      last_paragraph.update! content: last_paragraph.content[0..-2]
+      paragraph_texts[0] = paragraph_texts[0][1..-1]
+    else
+      current_paragraph_text = paragraph_texts.shift
+      last_paragraph.update! content: last_paragraph.content + current_paragraph_text
     end
   end
 end
