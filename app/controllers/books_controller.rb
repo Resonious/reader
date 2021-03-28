@@ -2,8 +2,11 @@
 
 # Front end for books
 class BooksController < ApplicationController
+  include KeyAuthentication
+
   def index
     @books = Book.all
+    render layout: 'waves'
   end
 
   def show

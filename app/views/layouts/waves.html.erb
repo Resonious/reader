@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= @title || "Nigel's Book Viewer" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta charset="UTF-8">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%# stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%# javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <%= yield :head %>
+    <style>
+      .wave,.content {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+      }
+
+      .top-half {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+
+        height: 60%;
+
+        background-color: white;
+      }
+
+      .bottom-half {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+
+        height: 40%;
+
+        background-color: #f2f2f2;
+      }
+
+      .content {
+        display: flex;
+        flex-direction: column;
+
+        align-items: center;
+        justify-content: center;
+      }
+
+      .wave {
+        display: flex;
+        flex-direction: row;
+
+        align-items: center;
+        justify-content: center;
+      }
+
+      .wave-graphic {
+        position: relative;
+
+        flex-shrink: 0;
+
+        animation-duration: 20s;
+        animation-name: move-right;
+        animation-iteration-count: infinite;
+        animation-timing-function: linear;
+      }
+
+      #wave1 {
+        animation-delay: -13.333s;
+      }
+
+      #wave3 {
+        animation-delay: -6.666s;
+      }
+
+      @keyframes move-right {
+        from {
+          left: -100%;
+        }
+        to {
+          left: 100%;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class='top-half'>
+    </div>
+
+    <div class='bottom-half'>
+    </div>
+
+    <div class='wave'>
+      <%= render 'gfx/wave', id: 'wave1' %>
+    </div>
+    <div class='wave'>
+      <%= render 'gfx/wave', id: 'wave2' %>
+    </div>
+    <div class='wave'>
+      <%= render 'gfx/wave', id: 'wave3' %>
+    </div>
+
+    <div class='content'>
+      <%= yield %>
+    </div>
+  </body>
+</html>

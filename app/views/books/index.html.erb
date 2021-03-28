@@ -1,7 +1,39 @@
-<h1>Books</h1>
+<% content_for :head do %>
+<style>
+  .content {
+    overflow-y: scroll;
+  }
 
-<ul>
-  <% @books.each do |book| %>
-    <li><%= link_to book.name, book_path(book.slug) %></li>
-  <% end %>
-</ul>
+  .collection {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .book {
+    display: block;
+    box-sizing: border-box;
+    text-align: center;
+
+    height: 300px;
+    width: 200px;
+
+    background: white;
+    border: 1px solid grey;
+
+    padding: 10px;
+    margin: 10px;
+  }
+</style>
+<% end %>
+
+<%= flash[:notice] %>
+
+<div class='collection'>
+<% @books.each do |book| %>
+  <a class='book' href='<%= book_path(book.slug, '0') %>'>
+    <p><%= book.name %></p>
+    <p><%= pluralize book.paragraphs.size, 'page' %></p>
+  </a>
+<% end %>
+</div>

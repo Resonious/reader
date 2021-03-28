@@ -1,5 +1,5 @@
-AllCops:
-    NewCops: enable
+# AllCops:
+#     NewCops: enable
 
 Layout/ArgumentAlignment:
   Enabled: false
@@ -11,3 +11,6 @@ Metrics/BlockLength:
   Exclude:
     - 'app/api/**/*'
     - 'spec/**/*'
+
+Style/AndOr:
+  Enabled: false
