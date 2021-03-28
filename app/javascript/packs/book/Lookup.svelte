@@ -8,6 +8,7 @@
 
   $: kanji = result && result.japanese[0].word
   $: furigana = result && result.japanese[0].reading
+  $: jlpt = result && result.jlpt[0]
 
   $: senses = (result && result.senses) || []
 </script>
@@ -24,26 +25,53 @@
     overflow-y: scroll;
   }
 
+  .def {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+  }
+
   a {
     font-size: 140%;
+    color: black;
+  }
+
+  a:visited {
+    color: black;
   }
 
   .senses {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    margin-left: 5px;
+  }
+
+  ul {
+    border: 1px solid #ccc;
+    padding: 5px;
+    margin: 5px;
+  }
+
+  li {
+    list-style: none;
   }
 </style>
 
 <div class='main'>
   {#if slug}
-    <a href='https://jisho.org/search/{query}' target=_blank>
-      {#if kanji}
-        <ruby>{kanji}<rt>{furigana}</rt></ruby>
-      {:else}
-        {slug}
+    <div class='def'>
+      <a href='https://jisho.org/search/{query}' target=_blank>
+        {#if kanji}
+          <ruby>{kanji}<rt>{furigana}</rt></ruby>
+        {:else}
+          {slug};
+        {/if}
+      </a>
+      {#if jlpt}
+        <small>{jlpt}</small>
       {/if}
-    </a>
+    </div>
   {/if}
 
   <div class='senses'>

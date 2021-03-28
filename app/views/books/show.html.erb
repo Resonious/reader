@@ -36,8 +36,13 @@
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    for (const el of document.querySelectorAll('p')) {
-      el.onclick = () => document.location.hash = `#${el.id}`
+    for (const el of document.querySelectorAll('article p')) {
+      el.onclick = () => {
+        const range = window.getSelection().getRangeAt(0)
+
+        if (range.startOffset === range.endOffset)
+          document.location.hash = `#${el.id}`
+      }
     }
     hashchange()
   })
@@ -79,6 +84,7 @@
     left: 0px;
     right: 55px;
     height: 65px;
+    background-color: #f9f9f9;
   }
 
   article {
