@@ -13,7 +13,7 @@ class AuthenticationsController < ApplicationController
     if api_key.present?
       cookies[:api_key] = { value: api_key.key, expires: 3.days }
       flash[:notice] = 'Welcome!'
-      redirect_to books_path
+      redirect_to session.delete(:target) || books_path
     else
       flash[:alert] = 'No dice.'
       redirect_to sign_in_path
