@@ -2,7 +2,10 @@
   export let query = null
   export let results = { meta: {}, data: [] }
 
-  $: result = results.data[0]
+  const commonParticles = ['が', 'は', 'を']
+
+  $: result = results.data.length > 1 && commonParticles.includes(results.data[0].slug)
+              ? results.data[1] : results.data[0]
 
   $: slug = result && result.slug
 
