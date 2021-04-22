@@ -1,5 +1,3 @@
-import('styles/base.scss');
-
 // Light and dark mode
 document.addEventListener('DOMContentLoaded', function() {
   const container = document.body;
