@@ -12,6 +12,15 @@
   %>
 
   const hashchange = () => {
+    if (!location.hash || location.hash.length <= 1) {
+      const stored = sessionStorage.getItem('<%= @book.slug %>-page')
+      if (stored && stored.length > 0)
+        location.hash = stored
+      else
+        sessionStorage.setItem('<%= @book.slug %>-page', null)
+      return
+    }
+
     const n = location.hash.substr(1)
     let selected
 
@@ -31,8 +40,12 @@
     for (const el of document.querySelectorAll('.highlight'))
       el.classList.remove('highlight')
 
-    if (selected)
+    if (selected) {
       selected.classList.add('highlight')
+      sessionStorage.setItem('<%= @book.slug %>-page', n)
+    }
+    else
+      sessionStorage.setItem('<%= @book.slug %>-page', null)
   }
 
   document.addEventListener('DOMContentLoaded', () => {
