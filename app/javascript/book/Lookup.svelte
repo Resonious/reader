@@ -37,11 +37,6 @@
 
   a {
     font-size: 140%;
-    color: black;
-  }
-
-  a:visited {
-    color: black;
   }
 
   .senses {
@@ -52,7 +47,7 @@
   }
 
   ul {
-    border: 1px solid #ccc;
+    background-color: var(--color-bump2);
     padding: 5px;
     margin: 5px;
   }

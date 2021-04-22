@@ -1,0 +1,92 @@
+@import "nord";
+
+body {
+  --color-nav: #{$nord10};
+  --color-border: #{$nord8};
+}
+
+a {
+  .dark & {
+    color: $nord6;
+
+    &:visited {
+      color: $nord6;
+    }
+    &:hover,&:active {
+      color: $nord8;
+    }
+  }
+
+  .light & {
+    font-weight: bold;
+    color: $nord0;
+
+    &:visited {
+      color: $nord0;
+    }
+    &:hover,&:active {
+      color: $nord1;
+    }
+  }
+}
+
+button,input {
+  padding: 9px;
+  border-radius: 5px;
+}
+
+button {
+  background-color: $nord7;
+  color: $nord6;
+  border: none;
+  min-width: 80px;
+}
+
+input {
+  box-sizing: border-box;
+
+  .dark & {
+    background-color: $nord2;
+    border: 1px solid $nord4;
+    color: $nord6;
+  }
+
+  .light & {
+    background-color: white;
+    border: 1px solid $nord5;
+    color: $nord0;
+  }
+
+  &:focus {
+    outline: none;
+    border: 1px solid $nord8;
+  }
+}
+
+.dark {
+  background-color: #292e39;
+  color: $nord6;
+
+  --color-active: #{$nord0};
+  --color-bump1: #{$nord0};
+  --color-bump2: #{$nord1};
+}
+
+.light {
+  background-color: white;
+  color: $nord0;
+
+  --color-active: #{$nord6};
+  --color-bump1: #{$nord5};
+  --color-bump2: #{$nord4};
+}
+
+::selection {
+  .dark & {
+    background: $nord10;
+  }
+  .light & {
+    background: $nord8;
+  }
+  color: unset;
+}

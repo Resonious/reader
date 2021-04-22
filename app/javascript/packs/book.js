@@ -1,4 +1,4 @@
-import Lookup from './book/Lookup.svelte'
+import Lookup from 'book/Lookup.svelte'
 const debounce = require('lodash/debounce')
 
 document.addEventListener('DOMContentLoaded', () => {

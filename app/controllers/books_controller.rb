@@ -5,6 +5,7 @@ class BooksController < ApplicationController
   include KeyAuthentication
 
   def index
+    @title = 'Select a book'
     @books = Book.all
     render layout: 'waves'
   end
