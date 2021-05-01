@@ -128,7 +128,7 @@
 
   <article>
     <% @paragraph.lines.each_with_index do |line, i| %>
-      <p id='p<%= i %>'><%= line %></p>
+      <p id='p<%= i %>'><%= line.html_safe %></p>
     <% end %>
   </article>
 
