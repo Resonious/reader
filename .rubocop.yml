@@ -12,5 +12,8 @@ Metrics/BlockLength:
     - 'app/api/**/*'
     - 'spec/**/*'
 
+Metrics/AbcSize:
+  Max: 16
+
 Style/AndOr:
   Enabled: false

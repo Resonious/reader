@@ -17,11 +17,16 @@ class Paragraph < ApplicationRecord
   end
 
   def lines
-    @lines ||= content.split('　')#.map { |l| Paragraph.highlight(l, '行く') }
+    @lines ||= begin
+      keywords = Rails.cache.fetch('all-keywords', expires_in: 5.minutes) do
+        Keyword.all.map(&:word).to_set
+      end
+      content.split('　').map { |line| Paragraph.highlight(line, keywords) }
+    end
   end
 
   class << self
-    def highlight(line, *targets)
+    def highlight(line, targets)
       @nm ||= Natto::MeCab.new
 
       @nm.parse(line).split("\n").map(&:chomp).map do |output|

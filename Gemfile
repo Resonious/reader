@@ -38,6 +38,9 @@ gem 'faraday'
 # Japanese text processing
 gem 'natto'
 
+# Notion integration!
+gem 'notion', require: 'notion_api', github: 'timgrc/notion-ruby', branch: 'fix-get-collection-rows'
+
 group :development, :test do
   # Call 'binding.pry' anywhere in the code to stop execution and get a debugger console
   gem 'pry-byebug', platforms: [:mri, :mingw, :x64_mingw]
