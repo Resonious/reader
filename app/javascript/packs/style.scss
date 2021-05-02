@@ -82,7 +82,8 @@ input {
 }
 
 .hl {
-  background-color: $nord15;
+  background-color: rgba($nord15, 0.35);
+  border-radius: 10%;
 }
 
 ::selection {
