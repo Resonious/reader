@@ -57,6 +57,12 @@
           document.location.hash = `#${el.id}`
       }
     }
+    for (const el of document.getElementsByClassName('nav-btn')) {
+      el.addEventListener('click', () => {
+        const anchor = el.href.split('#')[1]
+        sessionStorage.setItem('<%= @book.slug %>-page', anchor)
+      })
+    }
     hashchange()
   })
 
