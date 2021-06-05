@@ -11,71 +11,8 @@
     }.to_json)
   %>
 
-  const hashchange = () => {
-    if (!location.hash || location.hash.length <= 1) {
-      const stored = sessionStorage.getItem('<%= @book.slug %>-page')
-      if (stored && stored.length > 0)
-        location.hash = stored
-      else
-        sessionStorage.setItem('<%= @book.slug %>-page', null)
-      return
-    }
-
-    const n = location.hash.substr(1)
-    let selected
-
-    if (n === 'first') {
-      selected = document.querySelector('article p:first-child')
-      location.hash = `#${selected.id}`
-      return
-    }
-    else if (n === 'last') {
-      selected = document.querySelector('article p:last-child')
-      location.hash = `#${selected.id}`
-      return
-    }
-    else
-      selected = document.querySelector(`#${n}`)
-
-    for (const el of document.querySelectorAll('.highlight'))
-      el.classList.remove('highlight')
-
-    if (selected) {
-      selected.classList.add('highlight')
-      sessionStorage.setItem('<%= @book.slug %>-page', n)
-    }
-    else
-      sessionStorage.setItem('<%= @book.slug %>-page', null)
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    for (const el of document.querySelectorAll('article p')) {
-      el.onclick = () => {
-        const range = window.getSelection().getRangeAt(0)
-
-        if (range.startOffset === range.endOffset)
-          document.location.hash = `#${el.id}`
-      }
-    }
-    for (const el of document.getElementsByClassName('nav-btn')) {
-      el.addEventListener('click', () => {
-        const anchor = el.href.split('#')[1]
-        sessionStorage.setItem('<%= @book.slug %>-page', anchor)
-      })
-    }
-    hashchange()
-  })
-
-  window.addEventListener('hashchange', hashchange)
-
-  document.addEventListener('selectionchange', async() => {
-    const text = document.getSelection().toString()
-    if (!text) return
-    if (text.length > 10) return
-    if (text.length <= 0) return
-
-    lookupRequest(text, results => window.lookup.$set({results, query: text}))
-  })
+  <%= render 'paragraph_navigation.js' %>
+  <%= render 'font_zoom.js' %>
 </script>
 
 <style>
@@ -95,6 +32,10 @@
     position: fixed;
     right: 15px;
     top: 5px;
+
+    display: flex;
+    flex-direction: column;
+    text-align: center;
   }
 
   #lookup {
@@ -112,6 +53,13 @@
     padding-right: 35px;
 
     line-height: 1.6;
+  }
+
+  p {
+    margin-left: 8px;
+    margin-right: 8px;
+    padding-left: 8px;
+    padding-right: 8px;
   }
 
   .highlight {
@@ -142,4 +90,9 @@
     <%= link_to '', book_path(@book.slug, @paragraph.index - 1, anchor: 'last'), class: 'nav-btn' %>
   <% end %>
 </div>
-<span id='pageno'><%= @paragraph.index %>/<%= @book.paragraphs.size-1 %></span>
+<div id='pageno'>
+  <span><%= @paragraph.index %>/<%= @book.paragraphs.size-1 %></span>
+  <%= link_to '/' do %>
+    <%= image_tag 'dictionarian.png', width: '32', height: '32' %>
+  <% end %>
+</div>
