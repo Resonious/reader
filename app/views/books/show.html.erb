@@ -47,6 +47,23 @@
     background-color: var(--color-bump1);
   }
 
+  #zoom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 20px;
+
+    display: flex;
+    flex-direction: row;
+  }
+  #zoom input {
+    width: 100%;
+  }
+  #zoom button {
+    min-width: 20px;
+  }
+
   article {
     writing-mode: vertical-rl;
     padding-left: 35px;
@@ -95,4 +112,8 @@
   <%= link_to '/' do %>
     <%= image_tag 'dictionarian.png', width: '32', height: '32' %>
   <% end %>
+</div>
+<div id='zoom'>
+  <input id='font-zoom' type='range' min='12' max='100' />
+  <button id='reset-zoom'>⏎</button>
 </div>
