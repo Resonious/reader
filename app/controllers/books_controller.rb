@@ -15,5 +15,7 @@ class BooksController < ApplicationController
 
     @book = Book.find_by!(slug: params[:slug])
     @paragraph = @book.paragraphs.at(params[:p])
+
+    cookies["book_#{@book.slug}"] = { value: params[:p] }
   end
 end

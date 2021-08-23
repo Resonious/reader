@@ -108,7 +108,7 @@
   <% end %>
 </div>
 <div id='pageno'>
-  <span><%= @paragraph.index %>/<%= @book.paragraphs.size-1 %></span>
+  <span><%= link_to @paragraph.index, request.fullpath %>/<%= @book.paragraphs.size-1 %></span>
   <%= link_to '/' do %>
     <img src='/images/dictionarian.png' width=32 height=32 />
   <% end %>
