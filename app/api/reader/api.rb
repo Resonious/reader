@@ -1,14 +1,17 @@
+# frozen_string_literal: true
+
 module Reader
+  # This is the API you can use to populate books.
   class API < Grape::API
     version 'v1', using: :path
     format :json
 
     helpers do
       def api_key
-        @api_key ||= (
+        @api_key ||= begin
           username = Rack::Auth::Basic::Request.new(env)&.username
           APIKey.find_by(key: username.encode('UTF-8')) if username
-        )
+        end
       rescue Encoding::UndefinedConversionError
         nil
       end

@@ -18,10 +18,11 @@ class Paragraph < ApplicationRecord
 
   def lines
     @lines ||= begin
-      keywords = Rails.cache.fetch('all-keywords', expires_in: 5.minutes) do
-        Keyword.all.map(&:word).to_set
-      end
-      content.split('　').map { |line| Paragraph.highlight(line, keywords) }
+      # TODO: Fix notion api
+      # keywords = Rails.cache.fetch('all-keywords', expires_in: 5.minutes) do
+      #   Keyword.all.map(&:word).to_set
+      # end
+      content.split('　') # .map { |line| Paragraph.highlight(line, keywords) }
     end
   end
 
