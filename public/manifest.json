@@ -1,0 +1,14 @@
+{
+  "short_name": "JA Reader",
+  "name": "JA Reader: Book and dictionary in one place.",
+  "icons": [
+    {
+      "src": "/images/dictionarian.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#55889e",
+  "display": "standalone"
+}
