@@ -39,7 +39,7 @@ gem 'faraday'
 gem 'natto'
 
 # Notion integration!
-gem 'notion', require: 'notion_api', github: 'timgrc/notion-ruby', branch: 'fix-get-collection-rows'
+#gem 'notion', require: 'notion_api', github: 'timgrc/notion-ruby', branch: 'fix-get-collection-rows'
 
 group :development, :test do
   # Call 'binding.pry' anywhere in the code to stop execution and get a debugger console
