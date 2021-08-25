@@ -90,7 +90,7 @@ document.addEventListener('selectionchange', async() => {
   if (text.length > 10) return
   if (text.length <= 0) return
 
-  lookupRequest(text, results => lookup.$set({results, query: text}))
+  lookupRequest(text, results => lookup.$set({results, query: text, index: 0}))
 })
 
 

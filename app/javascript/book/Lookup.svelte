@@ -3,11 +3,9 @@
   export let results = { meta: {}, data: [] }
   export let page = 0;
   export let pageCount = 0;
+  export let index = 0;
 
-  const commonParticles = ['が', 'は', 'を']
-
-  $: result = results.data.length > 1 && commonParticles.includes(results.data[0].slug)
-              ? results.data[1] : results.data[0]
+  $: result = results.data[index]
 
   $: slug = result && result.slug
 
@@ -16,6 +14,17 @@
   $: jlpt = result && result.jlpt[0]
 
   $: senses = (result && result.senses) || []
+
+  $: canPrev = index > 0
+  $: canNext = index < results.data.length - 1
+
+  function prev() {
+    index -= 1;
+  }
+
+  function next() {
+    index += 1;
+  }
 
   function close() {
     results.data = []
@@ -87,6 +96,8 @@
   }
 
   button {
+    align-self: flex-start;
+
     background-color: var(--color-bump2);
     box-shadow: 0px 1px 2px black;
     margin: 5px;
@@ -119,6 +130,12 @@
       </ul>
     {/each}
     {#if senses.length > 0}
+      {#if canPrev }
+        <button on:click={prev}>&lt;</button>
+      {/if}
+      {#if canNext }
+        <button on:click={next}>&gt;</button>
+      {/if}
       <button on:click={close}>&times;</button>
     {:else}
       <form on:submit|preventDefault={gotoPage}>
