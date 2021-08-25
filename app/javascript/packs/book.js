@@ -14,8 +14,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // --- navigation --- //
 
-const hashchange = () => {
-  if (!location.hash || location.hash.length <= 1) {
+const hashchange = (arg) => {
+  if (arg === 'first' && (!location.hash || location.hash.length <= 1)) {
     const stored = localStorage.getItem(`${window.book.slug}-page`)
     if (stored && stored.length > 0)
       location.hash = stored
@@ -27,20 +27,21 @@ const hashchange = () => {
   }
 
   const n = location.hash.substr(1)
-  let selected
 
-  if (n === 'first') {
-    selected = document.querySelector('article p:first-child')
-    location.hash = `#${selected.id}`
-    return
+  if (arg === 'first') {
+    if (n === 'first') {
+      const selected = document.querySelector('article p:first-child')
+      location.hash = `#${selected.id}`
+      return
+    }
+    else if (n === 'last') {
+      const selected = document.querySelector('article p:last-child')
+      location.hash = `#${selected.id}`
+      return
+    }
   }
-  else if (n === 'last') {
-    selected = document.querySelector('article p:last-child')
-    location.hash = `#${selected.id}`
-    return
-  }
-  else
-    selected = document.querySelector(`#${n}`)
+
+  const selected = document.querySelector(`#${n}`)
 
   for (const el of document.querySelectorAll('.highlight'))
     el.classList.remove('highlight')
@@ -68,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
       localStorage.setItem(`${window.book.slug}-page`, anchor)
     })
   }
-  hashchange()
+  hashchange('first')
 })
 
 window.addEventListener('hashchange', hashchange)

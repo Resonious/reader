@@ -1,6 +1,8 @@
 <script>
   export let query = null
   export let results = { meta: {}, data: [] }
+  export let page = 0;
+  export let pageCount = 0;
 
   const commonParticles = ['が', 'は', 'を']
 
@@ -17,6 +19,25 @@
 
   function close() {
     results.data = []
+  }
+
+  function gotoPage() {
+    const components = location.pathname.split('/')
+    components[components.length - 1] = page
+    location.href = components.join('/')
+  }
+
+  let fetchText = 'Fetch'
+  async function fetchForCache() {
+    const components = location.pathname.split('/')
+    const currentPage = Number(components[components.length - 1])
+
+    for (let i = currentPage + 1; i <= page; ++i) {
+      fetchText = String(i)
+      components[components.length - 1] = i
+      await fetch(components.join('/'))
+    }
+    fetchText = 'Done';
   }
 </script>
 
@@ -60,6 +81,11 @@
     list-style: none;
   }
 
+  input {
+    margin: 5px;
+    width: 5em;
+  }
+
   button {
     background-color: var(--color-bump2);
     box-shadow: 0px 1px 2px black;
@@ -93,7 +119,13 @@
       </ul>
     {/each}
     {#if senses.length > 0}
-      <button class='close' on:click={close}>&times;</button>
+      <button on:click={close}>&times;</button>
+    {:else}
+      <form on:submit|preventDefault={gotoPage}>
+        <input type=number min=0 max={pageCount-1} bind:value={page} />
+        <button type=submit>Go</button>
+      </form>
+      <button on:click={fetchForCache}>{fetchText}</button>
     {/if}
   </div>
 </div>
