@@ -14,6 +14,10 @@
   $: jlpt = result && result.jlpt[0]
 
   $: senses = (result && result.senses) || []
+
+  function close() {
+    results.data = []
+  }
 </script>
 
 <style>
@@ -55,6 +59,13 @@
   li {
     list-style: none;
   }
+
+  button {
+    background-color: var(--color-bump2);
+    box-shadow: 0px 1px 2px black;
+    margin: 5px;
+    min-width: 40px;
+  }
 </style>
 
 <div class='main'>
@@ -81,5 +92,8 @@
         {/each}
       </ul>
     {/each}
+    {#if senses.length > 0}
+      <button class='close' on:click={close}>&times;</button>
+    {/if}
   </div>
 </div>
