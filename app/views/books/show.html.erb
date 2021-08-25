@@ -7,12 +7,10 @@
     raw({
       content: @paragraph.content,
       page: @paragraph.index,
-      pageCount: @book.paragraphs.size
+      pageCount: @book.paragraphs.size,
+      slug: @book.slug
     }.to_json)
   %>
-
-  <%= render 'paragraph_navigation.js' %>
-  <%= render 'font_zoom.js' %>
 </script>
 
 <style>

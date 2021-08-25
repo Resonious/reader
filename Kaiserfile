@@ -81,7 +81,7 @@ mnt["schema"]
 mnt["spec"]
 mnt["vendor"]
 mnt["yarn.lock"]
-mnt["knapsack_rspec_report.json"]
+mnt["postcss.config.js"]
 
 mnt[".babelrc"]
 mnt[".editorconfig"]

@@ -9,7 +9,7 @@ useradd -U -u $UID --home-dir /app app && \
 echo 'gem: --no-rdoc --no-ri' > ~/.gemrc
 
 # Install system packages
-RUN apt-get update && apt-get install -y curl git build-essential
+RUN apt-get update && apt-get install -y curl git build-essential libmecab-dev
 
 # Install NPM
 RUN wget https://nodejs.org/dist/v15.12.0/node-v15.12.0-linux-x64.tar.xz && \
