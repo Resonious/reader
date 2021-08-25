@@ -18,4 +18,6 @@ class BooksController < ApplicationController
 
     cookies["book_#{@book.slug}"] = { value: params[:p] }
   end
+
+  def resume; end
 end

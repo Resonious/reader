@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   get '/', to: 'books#index', as: 'books'
   get '/book/:slug/:p', to: 'books#show', as: 'book'
   get '/book/:slug', to: 'books#show'
+  get '/resume', to: 'books#resume', as: 'resume_book'
 
   get '/lookup/:q', to: 'lookups#new', as: 'lookup'
 

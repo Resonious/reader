@@ -8,13 +8,20 @@ self.addEventListener('install', () => {
 self.addEventListener('fetch', (e) => {
   e.respondWith((async () => {
     console.log(e.request);
-    const r = await caches.match(e.request);
+
+    // Return cached response if present
+    const cachedResponse = await caches.match(e.request);
     console.log(`[Service Worker] Handling ${e.request.url}`);
-    if (r) return r;
-    const response = await fetch(e.request);
+    if (cachedResponse) return cachedResponse;
+
+    // Fetch it for real
+    const realResponse = await fetch(e.request);
+    if (!realResponse.ok) return realResponse;
+
+    // Stick it in the cache if it was OK
     const cache = await caches.open(cacheName);
     console.log(`[Service Worker] Caching new resource: ${e.request.url}`);
-    cache.put(e.request, response.clone());
-    return response;
+    cache.put(e.request, realResponse.clone());
+    return realResponse;
   })());
 });

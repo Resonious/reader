@@ -31,7 +31,7 @@
 
 <div class='collection'>
 <% @books.each do |book| %>
-  <a class='book' href='<%= book_path(book.slug, cookies["book_#{book.slug}"] || '0') %>'>
+  <a class='book' href='<%= resume_book_path(anchor: book.slug) %>'>
     <p><%= book.name %></p>
     <p><%= pluralize book.paragraphs.size, 'page' %></p>
   </a>

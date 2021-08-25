@@ -6,6 +6,9 @@ let lookup
 document.addEventListener('DOMContentLoaded', () => {
   const target = document.getElementById('lookup')
   lookup = new Lookup({ target, props: window.book })
+
+  // Wow the concept of "page" is just messed up
+  localStorage.setItem(`${window.book.slug}-paragraph`, window.book.page)
 })
 
 
@@ -13,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 const hashchange = () => {
   if (!location.hash || location.hash.length <= 1) {
-    const stored = sessionStorage.getItem(`${window.book.slug}-page`)
+    const stored = localStorage.getItem(`${window.book.slug}-page`)
     if (stored && stored.length > 0)
       location.hash = stored
     else {
@@ -44,10 +47,10 @@ const hashchange = () => {
 
   if (selected) {
     selected.classList.add('highlight')
-    sessionStorage.setItem(`${window.book.slug}-page`, n)
+    localStorage.setItem(`${window.book.slug}-page`, n)
   }
   else
-    sessionStorage.setItem(`${window.book.slug}-page`, null)
+    localStorage.setItem(`${window.book.slug}-page`, null)
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -62,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
   for (const el of document.getElementsByClassName('nav-btn')) {
     el.addEventListener('click', () => {
       const anchor = el.href.split('#')[1]
-      sessionStorage.setItem(`${window.book.slug}-page`, anchor)
+      localStorage.setItem(`${window.book.slug}-page`, anchor)
     })
   }
   hashchange()
