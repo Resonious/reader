@@ -37,9 +37,15 @@ button,input {
 
 button {
   background-color: $nord7;
-  color: $nord6;
   border: none;
   min-width: 80px;
+
+  .dark & {
+    color: $nord6;
+  }
+  .light & {
+    color: $nord0;
+  }
 }
 
 input {
