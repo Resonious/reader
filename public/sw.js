@@ -1,27 +1,35 @@
-const cacheName = 'ja-reader-1'
+const cacheName = 'ja-reader-2'
 
 self.addEventListener('install', () => {
   console.log('[Service Worker] install!')
 })
 
-// Simple cache of everything...
-self.addEventListener('fetch', (e) => {
-  e.respondWith((async () => {
-    console.log(e.request);
+// We do a real fetch everytime, returning a cache in case of network errors.
+self.addEventListener('fetch', (event) => {
+  event.respondWith((async () => {
+    console.log(event.request);
 
-    // Return cached response if present
-    const cachedResponse = await caches.match(e.request);
-    console.log(`[Service Worker] Handling ${e.request.url}`);
-    if (cachedResponse) return cachedResponse;
+    try {
+      // Fetch it for real
+      const realResponse = await fetch(event.request);
+      if (!realResponse.ok) return realResponse;
 
-    // Fetch it for real
-    const realResponse = await fetch(e.request);
-    if (!realResponse.ok) return realResponse;
+      // Stick it in the cache if it was OK
+      if (realResponse.ok) {
+        const cache = await caches.open(cacheName);
+        console.log(`[Service Worker] Caching new resource: ${event.request.url}`);
+        cache.put(event.request, realResponse.clone());
+      }
 
-    // Stick it in the cache if it was OK
-    const cache = await caches.open(cacheName);
-    console.log(`[Service Worker] Caching new resource: ${e.request.url}`);
-    cache.put(e.request, realResponse.clone());
-    return realResponse;
+      // Return it
+      return realResponse;
+    }
+    catch (error) {
+      // Return cached response if real one failed
+      const cachedResponse = await caches.match(event.request);
+      console.log(`[Service Worker] Returning cached ${event.request.url}`);
+      if (cachedResponse) return cachedResponse;
+      else throw error;
+    }
   })());
 });
