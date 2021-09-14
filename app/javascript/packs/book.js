@@ -1,5 +1,5 @@
 import Lookup from 'book/Lookup.svelte'
-const debounce = require('lodash/debounce')
+const throttle = require('lodash/throttle')
 
 let lookup
 
@@ -77,11 +77,11 @@ window.addEventListener('hashchange', hashchange)
 
 // --- Lookup-on-select --- //
 
-const lookupRequest = debounce(
+const lookupRequest = throttle(
   (x, callback) => fetch(`/lookup/${x}`)
   .then(r => r.status === 404 ? { meta: { status: 404 }, data: [] } : r.json())
   .then(callback),
-  300
+  150
 )
 
 document.addEventListener('selectionchange', async() => {
